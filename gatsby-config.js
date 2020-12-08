@@ -1,28 +1,42 @@
-version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/node:latest
-    branches:
-      only: master
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - dependencies-
-            # fallback to using the latest cache if no exact match is found
-            - dependencies-
-      - run:
-          name: Install
-          command: yarn install
-      - save_cache:
-          paths:
-            - node_modules
-          key: dependencies-
-      - run:
-          name: Gatsby build site
-          command: yarn build
-      - run: curl -L https://github.com/bep/s3deploy/releases/download/v2.2.0/s3deploy_2.2.0_Linux-64bit.tar.gz | tar xvz
-      - run:
-          name: deploy
-          command: ./s3deploy -source=public/ -region=ap-northeast-1 -bucket=numb86.net
+module.exports = {
+  siteMetadata: {
+    title: `Gatsby Default Starter`,
+    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
+    author: `@gatsbyjs`,
+  },
+  plugins: [
+    `gatsby-plugin-react-helmet`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `images`,
+        path: `${__dirname}/src/images`,
+      },
+    },
+    `gatsby-transformer-sharp`,
+    `gatsby-plugin-sharp`,
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: `gatsby-starter-default`,
+        short_name: `starter`,
+        start_url: `/`,
+        background_color: `#663399`,
+        theme_color: `#663399`,
+        display: `minimal-ui`,
+        icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+      },
+    },
+    {
+     resolve: `gatsby-plugin-s3`,
+     options: {
+      bucketName: "gatsbytestbq",
+      protocol: "https",
+      hostname: "manual.cookiebot.jp",
+     },
+    }
+    // this (optional) plugin enables Progressive Web App + Offline functionality
+    // To learn more, visit: https://gatsby.dev/offline
+    // `gatsby-plugin-offline`,
+  ],
+}
