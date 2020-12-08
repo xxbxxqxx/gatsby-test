@@ -1,7 +1,43 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.com/docs/node-apis/
- */
-
-// You can delete this file if you're not using it
+version: 2.1
+jobs:
+  setup:
+    docker:
+      - image: circleci/node:10.15.3
+    working_directory: ~/application
+    steps:
+      - checkout
+      - run:
+          name: Update npm
+          command: "sudo npm install -g npm@latest"
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install npm wee
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+  build_and_deploy:
+    docker:
+      - image: circleci/node:10.15.3
+    working_directory: ~/application
+    steps:
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Deploy
+          command: |
+            npm run build && npm run deploy
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - setup
+      - build_and_deploy:
+          requires:
+            - setup
+          filters:
+            branches:
+              only:
+                - master
