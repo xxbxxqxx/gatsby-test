@@ -10,7 +10,7 @@ import PropTypes from "prop-types"
 import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
 
-function SEO({ description, lang, meta, title }) {
+function SEO({ lang, meta, pageTitle, pageDescription, showSiteNameInTitle, pagePath }) {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -25,16 +25,25 @@ function SEO({ description, lang, meta, title }) {
     `
   )
 
-  const metaDescription = description || site.siteMetadata.description
-  const defaultTitle = site.siteMetadata?.title
+  const metaDescription = pageDescription || site.siteMetadata.description
+  //const defaultTitle = site.siteMetadata?.title
+
+  let Title = `${site.siteMetadata.title}`
+  if (pageTitle){
+    if (showSiteNameInTitle === "true") {
+       Title = `${pageTitle} ｜ Classmethod`
+    } else {
+       Title = pageTitle
+    }
+  }
 
   return (
     <Helmet
       htmlAttributes={{
         lang,
       }}
-      title={title}
-      titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
+      title={Title}
+      //titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
       meta={[
         {
           name: `description`,
@@ -42,7 +51,7 @@ function SEO({ description, lang, meta, title }) {
         },
         {
           property: `og:title`,
-          content: title,
+          content: Title,
         },
         {
           property: `og:description`,
@@ -62,14 +71,15 @@ function SEO({ description, lang, meta, title }) {
         },
         {
           name: `twitter:title`,
-          content: title,
+          content: Title,
         },
         {
           name: `twitter:description`,
           content: metaDescription,
         },
       ].concat(meta)}
-    />
+    >
+    </Helmet>
   )
 }
 

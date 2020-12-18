@@ -1,3 +1,6 @@
+require('dotenv').config();
+const { BLOCKS, MARKS, INLINES } = require('@contentful/rich-text-types')
+
 module.exports = {
   siteMetadata: {
     title: `Gatsby Default Starter`,
@@ -15,6 +18,7 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
+    `gatsby-plugin-sass`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -34,7 +38,14 @@ module.exports = {
       protocol: "https",
       hostname: "manual.cookiebot.jp",
      },
-    }
+    },
+    {
+      resolve: `gatsby-source-contentful`,
+      options: {
+        spaceId: process.env.YOUR_SPACE_ID,
+        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+      },
+    },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,

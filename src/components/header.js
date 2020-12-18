@@ -1,32 +1,19 @@
 import { Link } from "gatsby"
 import PropTypes from "prop-types"
 import React from "react"
+import ModalSeach from "../components/modalSearch";
 
 const Header = ({ siteTitle }) => (
-  <header
-    style={{
-      background: `rebeccapurple`,
-      marginBottom: `1.45rem`,
-    }}
-  >
-    <div
-      style={{
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `1.45rem 1.0875rem`,
-      }}
-    >
-      <h1 style={{ margin: 0 }}>
-        <Link
-          to="/"
-          style={{
-            color: `white`,
-            textDecoration: `none`,
-          }}
-        >
-          {siteTitle}
-        </Link>
-      </h1>
+  <header>
+    <div className="ast-container ast-container-header">
+      <div className="flex-row">
+        <div className="flex-column-6">
+          <h1><Link to="/">Sample Site</Link></h1>
+        </div>
+        <div className="flex-column-6 header-link__search">
+          <ModalSeach />
+        </div>
+      </div>
     </div>
   </header>
 )
